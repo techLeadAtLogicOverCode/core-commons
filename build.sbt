@@ -19,7 +19,7 @@ val build = ScalaBuild("com.logicovercode", "core-commons", "0.0.001")
   .scalaVersions("2.13.8")
   .publish(githubRepo.developer, MIT_License, githubRepo, Opts.resolver.sonatypeStaging)
 
-idePackagePrefix := Some("com.logicovercode.ccommons")
+//idePackagePrefix := Some("com.logicovercode.ccommons")
 
 //val fSbtAdtsModule = SbtModule("com.logicovercode" %% "fsbt-adts" % "0.0.001", PARENT_DIRECTORY / "fsbt-adts", "fSbtAdtsProject")
 

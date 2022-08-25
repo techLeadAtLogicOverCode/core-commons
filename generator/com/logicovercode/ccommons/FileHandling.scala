@@ -27,10 +27,10 @@ trait FileHandling {
     } yield line
   }
 
-  def allGeneratedDependenciesTraitFile : File = cwd / "generated-dependencies" / "dependencies" / s"AllGeneratedDependencies.scala"
+  def allGeneratedDependenciesTraitFile : File = cwd / "generated-dependencies" / "com" / "logicovercode" / "ccommons" / "dependencies" / s"AllGeneratedDependencies.scala"
 
   def regeneratedTraitFile(configFile : File) : File = {
-    val traitFile = cwd / "generated-dependencies" / "dependencies" / s"${configFile.nameWithoutExtension}Dependencies.scala"
+    val traitFile = cwd / "generated-dependencies" / "com" / "logicovercode" / "ccommons" / "dependencies" / s"${configFile.nameWithoutExtension}Dependencies.scala"
     recreateFile(traitFile)
     traitFile
   }

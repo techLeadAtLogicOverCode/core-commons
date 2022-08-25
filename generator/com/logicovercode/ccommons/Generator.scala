@@ -16,10 +16,10 @@ class Generator extends AsyncFlatSpecLike with Matchers with FileHandling with B
   def traitBody(allMethods: List[Stat], traitName: String): String = {
     val prefix =
       s"""
-     package com.logicovercode.fsbt.commons
+     package com.logicovercode.ccommons
      package dependencies
      import com.logicovercode.cadts._
-     import com.logicovercode.ccommons._          
+
      trait $traitName extends DependencyValidation
       """
 
@@ -73,8 +73,6 @@ class Generator extends AsyncFlatSpecLike with Matchers with FileHandling with B
       """
         |package com.logicovercode.ccommons
         |package dependencies
-        |
-        |import com.logicovercode.fsbt.commons.dependencies._
         |
         |trait AllGeneratedDependencies extends JavaDependencies with ScalaDependencies{
         |
