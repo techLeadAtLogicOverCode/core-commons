@@ -1,2 +1,3 @@
-addSbtPlugin("com.logicovercode" %% "fluent-style-sbt-core" % "0.0.426")
-addSbtPlugin("org.jetbrains" % "sbt-ide-settings" % "1.1.0")
+addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.6")
+addSbtPlugin("org.xerial.sbt" % "sbt-sonatype" % "3.9.10")
+addDependencyTreePlugin

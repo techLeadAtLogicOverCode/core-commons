@@ -1,31 +1,53 @@
-import com.logicovercode.bsbt.scala_module.ScalaBuild
+name := "core-commons"
 
-val githubRepo = githubHosting("logicovercode", "core-commons", "techLeadAtLogicOverCode", "techlead@logicovercode.com")
+version := "0.0.001"
 
-val build = ScalaBuild("com.logicovercode", "core-commons", "0.0.001")
-  .sourceDirectories("core", "generated-dependencies")
-  .testSourceDirectories("generator")
-  .dependencies(
-    "com.logicovercode" %% "core-adts" % "0.0.001",
-  )
-  .testDependencies(
+scalaVersion := "2.13.8"
+
+val projectSourceDirs = List("core", "generated-dependencies")
+Compile / unmanagedSourceDirectories ++= projectSourceDirs.map(dir => (Compile / baseDirectory).value / dir)
+
+val testSourceDirs = List("generator")
+Test / unmanagedSourceDirectories ++= testSourceDirs.map(dir => (Test / baseDirectory).value / dir)
+
+val testResourceDirs = List("generator-config")
+Test / unmanagedSourceDirectories ++= testResourceDirs.map(dir => (Test / baseDirectory).value / dir)
+
+
+libraryDependencies += "com.logicovercode" %% "core-adts" % "0.0.001"
+libraryDependencies ++= Seq(
     "org.scalatest" %% "scalatest" % "3.2.10",
     "org.scalameta" %% "scalameta" % "4.4.32",
     "org.typelevel" %% "cats-core" % "2.8.0",
-    "com.github.pathikrit" %% "better-files" % "3.9.1"
+    "com.github.pathikrit" %% "better-files" % "3.9.1"  
+).map(_ % Test)
+
+organization := "com.logicovercode"
+
+val techLead = Developer(
+  "techLead",
+  "techLead",
+  "techlead@logicovercode.com",
+  url("https://github.com/logicovercode")
+)
+developers := List(techLead)
+
+homepage := Some(
+  url("https://github.com/logicovercode/core-commons")
+)
+scmInfo := Some(
+  ScmInfo(
+    url("https://github.com/logicovercode/core-commons"),
+    "git@github.com:logicovercode/core-commons.git"
   )
-  .testResourceDirectories("generator-config")
-  .javaCompatibility("1.8", "1.8")
-  .scalaVersions("2.13.8")
-  .publish(githubRepo.developer, MIT_License, githubRepo, Opts.resolver.sonatypeStaging)
+)
 
-//idePackagePrefix := Some("com.logicovercode.ccommons")
+licenses += ("MIT", url("https://opensource.org/licenses/MIT"))
 
-//val fSbtAdtsModule = SbtModule("com.logicovercode" %% "fsbt-adts" % "0.0.001", PARENT_DIRECTORY / "fsbt-adts", "fSbtAdtsProject")
+publishTo := Some(Opts.resolver.sonatypeStaging)
 
-lazy val fSbtCommonsProject = (project in file("."))
-  .settings(build.settings)
-  //.dependsOn(fSbtAdtsModule)
+publishLocalConfiguration := publishLocalConfiguration.value.withOverwrite(true)
 
 (publishLocal) := ( (publishLocal).toTask dependsOn (Compile / scalafmt) dependsOn (Test / test) ).value
 
+val fSbtCommonsProject = project in file(".")
