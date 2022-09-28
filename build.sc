@@ -2,10 +2,18 @@ import mill.api.Loose
 import mill.{T, _}
 import mill.scalalib._
 import mill.scalalib.publish.{Developer, License, PomSettings, VersionControl}
+import coursier.maven.MavenRepository
 
 object `core-commons` extends ScalaModule with PublishModule {
 
   def scalaVersion = "2.13.8"
+
+  def repositoriesTask = T.task { 
+    val localMillRepoPathString = "file:" + sys.env("LOCAL_MILL_REPO")
+    println(s"local mill repo path >$localMillRepoPathString<")
+    val localMillRepo = MavenRepository(localMillRepoPathString)
+    super.repositoriesTask() ++ Seq(localMillRepo) 
+  }
 
   override def sources = T.sources {
     val coreSrcDir = millSourcePath / os.up / "core"
