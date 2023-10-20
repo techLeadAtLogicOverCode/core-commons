@@ -1,1 +1,7 @@
-sbt clean compile test scalafmt +publishLocal
+`sbt dependencyCodeGenerator/test`
+
+
+`sbt clean compile scalafmt`
+
+
+`sbt +publishLocal`

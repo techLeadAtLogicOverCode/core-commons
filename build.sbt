@@ -4,23 +4,12 @@ version := "0.0.001"
 
 scalaVersion := "2.13.8"
 
-val projectSourceDirs = List("core", "generated-dependencies")
-Compile / unmanagedSourceDirectories ++= projectSourceDirs.map(dir => (Compile / baseDirectory).value / dir)
-
-val testSourceDirs = List("generator")
-Test / unmanagedSourceDirectories ++= testSourceDirs.map(dir => (Test / baseDirectory).value / dir)
-
-val testResourceDirs = List("generator-config")
-Test / unmanagedSourceDirectories ++= testResourceDirs.map(dir => (Test / baseDirectory).value / dir)
-
+crossScalaVersions := Seq("2.13.8", "3.3.1")
 
 libraryDependencies += "com.logicovercode" %% "core-adts" % "0.0.001"
-libraryDependencies ++= Seq(
-    "org.scalatest" %% "scalatest" % "3.2.10",
-    "org.scalameta" %% "scalameta" % "4.4.32",
-    "org.typelevel" %% "cats-core" % "2.8.0",
-    "com.github.pathikrit" %% "better-files" % "3.9.1"  
-).map(_ % Test)
+
+val projectSourceDirs = List("core", "generated-dependencies")
+Compile / unmanagedSourceDirectories ++= projectSourceDirs.map(dir => (Compile / baseDirectory).value / dir)
 
 organization := "com.logicovercode"
 
@@ -48,6 +37,26 @@ publishTo := Some(Opts.resolver.sonatypeStaging)
 
 publishLocalConfiguration := publishLocalConfiguration.value.withOverwrite(true)
 
-(publishLocal) := ( (publishLocal).toTask dependsOn (Compile / scalafmt) dependsOn (Test / test) ).value
+(publishLocal) := ((publishLocal).toTask dependsOn (Compile / scalafmt) dependsOn (Test / test)).value
 
 val fSbtCommonsProject = project in file(".")
+
+lazy val dependencyCodeGenerator = (project in file("dependency-code-generator"))
+  .settings(
+    // Define the Scala version for compile scope
+    scalaVersion := "2.13.8",
+    // Define the Scala version for test scope
+    Test / scalaVersion := "2.13.6",
+    Test / unmanagedSourceDirectories ++= List("generator").map(dir => (Test / baseDirectory).value / dir),
+
+    Test / unmanagedSourceDirectories ++= List("generator-config").map(dir => (Test / baseDirectory).value / dir),
+    libraryDependencies += "com.logicovercode" %% "core-adts" % "0.0.001",
+
+
+    libraryDependencies ++= Seq(
+      "org.scalatest" %% "scalatest" % "3.2.17",
+      "org.scalameta" %% "scalameta" % "4.4.32",
+      "org.typelevel" %% "cats-core" % "2.10.0",
+      "com.github.pathikrit" %% "better-files" % "3.9.2"
+    ).map(_ % Test)
+  )
