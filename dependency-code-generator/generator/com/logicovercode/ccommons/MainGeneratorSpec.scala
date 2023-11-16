@@ -7,7 +7,7 @@ import org.scalatest.matchers.should.Matchers
 
 import scala.meta._
 
-class Generator extends AsyncFlatSpecLike with Matchers with FileHandling with BeforeAndAfterAll{
+class MainGeneratorSpec extends AsyncFlatSpecLike with Matchers with FileHandling with BeforeAndAfterAll{
 
   override protected def beforeAll(): Unit = {
     rm(allGeneratedDependenciesTraitFile.parent)
@@ -16,10 +16,10 @@ class Generator extends AsyncFlatSpecLike with Matchers with FileHandling with B
   def traitBody(allMethods: List[Stat], traitName: String): String = {
     val prefix =
       s"""
-     package com.logicovercode.fsbt.commons
+     package com.logicovercode.ccommons
      package dependencies
      import com.logicovercode.cadts._
-     import com.logicovercode.ccommons._          
+
      trait $traitName extends DependencyValidation
       """
 
@@ -28,9 +28,11 @@ class Generator extends AsyncFlatSpecLike with Matchers with FileHandling with B
     prefix ++ methodStrings.syntax
   }
 
+  val dependenciesConfigDir = cwd / "dependency-code-generator" / "generator-config"
+
   "generating java dependencies from Java.conf" should "work" in {
 
-    val configFile = cwd / "generator-config" / "Java.conf"
+    val configFile = dependenciesConfigDir / "Java.conf"
     val traitFile = regeneratedTraitFile(configFile)
 
     val eitherModuleIds = parseDependencyLines(configFile).map(parseJDependencyLine)
@@ -50,7 +52,7 @@ class Generator extends AsyncFlatSpecLike with Matchers with FileHandling with B
 
   "generating scala dependencies from Scala.conf" should "work" in {
 
-    val configFile = cwd / "generator-config" / "Scala.conf"
+    val configFile = dependenciesConfigDir / "Scala.conf"
     val traitFile = regeneratedTraitFile(configFile)
 
     val eitherModuleIds = parseDependencyLines(configFile).map(parseSDependencyLine)
@@ -73,8 +75,6 @@ class Generator extends AsyncFlatSpecLike with Matchers with FileHandling with B
       """
         |package com.logicovercode.ccommons
         |package dependencies
-        |
-        |import com.logicovercode.fsbt.commons.dependencies._
         |
         |trait AllGeneratedDependencies extends JavaDependencies with ScalaDependencies{
         |
