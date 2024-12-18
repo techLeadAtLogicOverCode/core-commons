@@ -1,10 +1,10 @@
 name := "core-commons"
 
-version := "0.0.001"
+version := "0.0.002"
 
 scalaVersion := "2.13.8"
 
-crossScalaVersions := Seq("2.13.8", "3.3.1")
+crossScalaVersions := Seq("2.13.15", "3.6.2")
 
 libraryDependencies += "com.logicovercode" %% "core-adts" % "0.0.001"
 
